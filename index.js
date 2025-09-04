@@ -16,9 +16,9 @@ const admin = require('firebase-admin');
 let serviceAccount;
 
 // En production (sur Render), on charge la clé depuis une variable d'environnement.
-if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
   try {
-    serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
     console.log("Clé de service Firebase chargée depuis la variable d'environnement.");
   } catch (e) {
     console.error("Erreur lors de l'analyse de la clé de service depuis la variable d'environnement.", e);
