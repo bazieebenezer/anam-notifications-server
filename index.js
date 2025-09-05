@@ -15,40 +15,46 @@ const admin = require('firebase-admin');
 
 let serviceAccount;
 
+console.log('Début du chargement de la clé de service Firebase...');
 // En production (sur Render), on charge la clé depuis une variable d'environnement.
 if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
+  console.log('Variable d\'environnement FIREBASE_SERVICE_ACCOUNT_KEY détectée.');
   try {
     serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
-    console.log("Clé de service Firebase chargée depuis la variable d'environnement.");
+    console.log("Clé de service Firebase chargée et parsée avec succès depuis la variable d'environnement.");
   } catch (e) {
-    console.error("Erreur lors de l'analyse de la clé de service depuis la variable d'environnement.", e);
+    console.error("ERREUR CRITIQUE: Erreur lors de l'analyse de la clé de service depuis la variable d'environnement.", e);
     process.exit(1);
   }
 } else {
+  console.log('Variable d\'environnement FIREBASE_SERVICE_ACCOUNT_KEY non détectée, tentative de chargement du fichier local.');
   // En développement, on charge le fichier local.
   try {
     serviceAccount = require('./serviceAccountKey.json');
-    console.log('Clé de service Firebase chargée depuis le fichier local serviceAccountKey.json.');
+    console.log('Clé de service Firebase chargée avec succès depuis le fichier local serviceAccountKey.json.');
   } catch (e) {
     console.error(
-      'ERREUR : Le fichier serviceAccountKey.json est introuvable.',
+      'ERREUR CRITIQUE : Le fichier serviceAccountKey.json est introuvable ou illisible.',
       'Veuillez suivre les instructions dans le code pour le configurer.',
-      'Le serveur ne peut pas démarrer sans cette clé.'
+      'Le serveur ne peut pas démarrer sans cette clé.', e
     );
-    process.exit(1); // Arrête le serveur si la clé est manquante
+    process.exit(1);
   }
 }
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Initialisation de l'app Firebase Admin
+console.log('Tentative d\'initialisation de l\'application Firebase Admin...');
+// Initialisation de l\'app Firebase Admin
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
+console.log('Application Firebase Admin initialisée avec succès.');
 
 const db = admin.firestore();
-console.log('Connexion à Firebase initialisée.');
+console.log('Connexion à Firestore établie.');
+
 
 // --- Logique d'envoi de notification ---
 
