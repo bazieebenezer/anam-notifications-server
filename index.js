@@ -66,7 +66,7 @@ console.log('Connexion à Firestore établie.');
  */
 async function sendNotification(topic, title, body) {
   if (!topic) {
-    console.log('Aucun topic spécifié, notification non envoyée.');
+    console.log('Aucun topic spécifié, notification non envoyée. Vérifiez bien les topics.');
     return;
   }
 
